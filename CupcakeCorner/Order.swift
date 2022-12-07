@@ -59,9 +59,10 @@ class Order: ObservableObject, Codable {
         }
         return cost
     }
-    
+    // init for making instances with empty ()
     init() { }
     
+    // archiving data
     func encode(to encoder: Encoder) throws {
         var container =  encoder.container(keyedBy: CodingKeys.self)
         
@@ -75,7 +76,7 @@ class Order: ObservableObject, Codable {
         try container.encode(zip, forKey: .zip)
     }
     
-    
+    // unarchiving data
     required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
