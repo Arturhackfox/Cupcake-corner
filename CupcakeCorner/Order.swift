@@ -39,6 +39,8 @@ class Order: ObservableObject, Codable {
     var isValidAddress: Bool {
         if name.isEmpty || address.isEmpty || city.isEmpty || zip.isEmpty{
             return false
+        } else if name.hasPrefix(" ") || name.hasSuffix(" ") || address.hasPrefix(" ") || address.hasSuffix(" ") || city.hasPrefix(" ") || city.hasSuffix(" ") || zip.hasPrefix(" ") || zip.hasSuffix(" "){
+            return false
         }
         return true
     }

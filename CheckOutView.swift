@@ -11,7 +11,10 @@ struct CheckOutView: View {
     @ObservedObject var order: Order
     
     @State private var confirmationMessage = ""
-    @State private var isAlertShowing = false
+    @State private var confirmationAlert = false
+    
+    @State private var errorAlertMessage = ""
+    @State private var isErrorAlertShowing = false
     
     var body: some View {
         ScrollView{
@@ -35,10 +38,15 @@ struct CheckOutView: View {
             }
             .navigationTitle("Check out")
             .navigationBarTitleDisplayMode(.inline)
-            .alert("You placed an order!", isPresented: $isAlertShowing){
+            .alert("You placed an order!", isPresented: $confirmationAlert){
                 Button("Ok"){}
             } message: {
                 Text(confirmationMessage)
+            }
+            .alert("There was an error!", isPresented: $isErrorAlertShowing){
+                Button("Ok"){}
+            } message: {
+                Text(errorAlertMessage)
             }
         }
     }
@@ -48,14 +56,14 @@ struct CheckOutView: View {
             print("Failed to encode data")
             return
         }
-        
+        // Uploading data to server
         let url = URL(string: "https://reqres.in/api/cupcakes")!
         
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpMethod = "POST"
         
-        // Uploading data from server above
+        // Downloading data from server
         do{
             let (data, _ ) = try await URLSession.shared.upload(for: request, from: encoded)
             
@@ -65,10 +73,12 @@ struct CheckOutView: View {
             
             confirmationMessage = "The order for \(decodedOrder.quantity)x \(Order.types[decodedOrder.type]) cupcakes is one the way!"
             
-            isAlertShowing = true
+            confirmationAlert = true
             
         } catch{
-            print("Failed to upload data from server")
+            errorAlertMessage = "Failed to upload data from server"
+
+            isErrorAlertShowing = true
         }
     }
 }

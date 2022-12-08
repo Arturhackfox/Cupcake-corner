@@ -17,6 +17,8 @@ struct DeliveryDetails: View {
                 TextField("Address", text: $order.address)
                 TextField("City", text: $order.city)
                 TextField("Zip", text: $order.zip)
+            } footer: {
+                Text("Whitespaces are not allowed")
             }
             
             Section{
